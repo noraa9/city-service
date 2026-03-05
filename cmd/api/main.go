@@ -68,10 +68,17 @@ func main() {
 	}
 
 	// 4. Connect to MinIO, ensure bucket exists.
-	minioClient, err := miniopkg.NewMinioClient(cfg)
-	if err != nil {
-		log.Error("minio init failed", slog.String("error", err.Error()))
-		os.Exit(1)
+	// minioClient, err := miniopkg.NewMinioClient(cfg)
+	// if err != nil {
+	// 	log.Error("minio init failed", slog.String("error", err.Error()))
+	// 	os.Exit(1)
+	// }
+	var minioClient *miniopkg.Client
+	if cfg.MinioEndpoint != "" {
+		minioClient, err = miniopkg.NewMinioClient(cfg)
+		if err != nil {
+			log.Warn("minio init failed, file uploads disabled", slog.String("error", err.Error()))
+		}
 	}
 
 	// 5. Initialize repositories (DB only).
