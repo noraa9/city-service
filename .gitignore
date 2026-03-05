@@ -1,0 +1,29 @@
+# Go build artifacts
+bin/
+dist/
+build/
+*.exe
+*.test
+*.out
+
+# Go module & build cache (should never be committed)
+.gocache/
+.gomodcache/
+
+# Environment / secrets
+.env
+.env.local
+.env.*
+
+# IDE/editor
+.idea/
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Swagger generated files (keep docs.go, ignore large JSON/YAML)
+docs/swagger.json
+docs/swagger.yaml
+
