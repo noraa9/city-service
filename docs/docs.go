@@ -819,7 +819,7 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 6
+                    "minLength": 4
                 },
                 "phone": {
                     "type": "string"
@@ -851,9 +851,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "city-service-production.up.railway.app",
 	BasePath:         "/api",
-	Schemes:          []string{},
+	Schemes:          []string{"https"},
 	Title:            "City Service API",
 	Description:      "REST API for City Service — city request management platform",
 	InfoInstanceName: "swagger",

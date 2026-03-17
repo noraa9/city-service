@@ -3,7 +3,8 @@
 // @title           City Service API
 // @version         1.0
 // @description     REST API for City Service — city request management platform
-// @host            localhost:8080
+// @host            city-service-production.up.railway.app
+// @Schemes         https
 // @BasePath        /api
 // @securityDefinitions.apikey BearerAuth
 // @in              header
