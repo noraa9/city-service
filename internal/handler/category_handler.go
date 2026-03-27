@@ -35,4 +35,3 @@ func (h *CategoryHandler) List(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, out)
 }
-

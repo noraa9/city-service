@@ -222,4 +222,3 @@ func (h *ContractorHandler) Complete(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, toRequestResponse(updated))
 }
-

@@ -23,4 +23,3 @@ func (s *CategorySvc) List(ctx context.Context) ([]domain.Category, error) {
 	}
 	return cats, nil
 }
-

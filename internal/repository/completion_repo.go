@@ -47,4 +47,3 @@ func (r *CompletionRepo) Create(ctx context.Context, c domain.Completion) (domai
 		CreatedAt: out.CreatedAt,
 	}, nil
 }
-

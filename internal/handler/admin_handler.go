@@ -119,10 +119,9 @@ func (h *AdminHandler) Stats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, map[string]any{
-		"total":      len(reqs),
-		"by_status":  byStatus,
+		"total":       len(reqs),
+		"by_status":   byStatus,
 		"by_category": catRows,
-		"by_urgency": byUrgency,
+		"by_urgency":  byUrgency,
 	})
 }
-

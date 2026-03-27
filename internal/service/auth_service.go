@@ -87,4 +87,3 @@ func (s *AuthSvc) Login(ctx context.Context, email, password string) (string, do
 
 	return token, u, nil
 }
-

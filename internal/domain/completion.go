@@ -17,4 +17,3 @@ type Completion struct {
 
 	CreatedAt time.Time
 }
-

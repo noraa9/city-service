@@ -96,4 +96,3 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		User:  toUserResponse(user),
 	})
 }
-

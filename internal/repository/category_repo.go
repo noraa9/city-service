@@ -46,4 +46,3 @@ func (r *CategoryRepo) GetByID(ctx context.Context, id int) (domain.Category, er
 	}
 	return domain.Category{ID: row.ID, Name: row.Name, Slug: row.Slug}, nil
 }
-

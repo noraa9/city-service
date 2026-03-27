@@ -184,4 +184,3 @@ func generateRequestNumber(existingCount int, role string, now time.Time) string
 	date := now.Format("060102")
 	return fmt.Sprintf("%d%s%s", existingCount+1, letter, date)
 }
-

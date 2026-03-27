@@ -12,4 +12,3 @@ func respondError(w http.ResponseWriter, status int, msg string) {
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(map[string]any{"data": nil, "error": msg})
 }
-

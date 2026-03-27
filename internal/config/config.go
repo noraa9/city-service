@@ -22,6 +22,18 @@ type Config struct {
 	JWTSecret string
 	JWTExpiry time.Duration
 
+	// PublicBaseURL is used to build public links for uploaded files.
+	//
+	// Examples:
+	// - local:   http://localhost:8080
+	// - railway: https://city-service-production.up.railway.app
+	PublicBaseURL string
+
+	// StorageDriver selects where we store uploaded photos.
+	// - "minio": upload to S3-compatible storage (MinIO)
+	// - "local": save to ./uploads and serve via /uploads/*
+	StorageDriver string
+
 	MinioEndpoint  string
 	MinioAccessKey string
 	MinioSecretKey string
@@ -32,16 +44,19 @@ type Config struct {
 // Load reads .env (if present) + environment variables and returns Config.
 //
 // Note:
-// - In production, .env file may not exist; env vars are usually injected by the platform.
-// - We still call godotenv.Load() because it's convenient locally; it does NOT error if file is missing
-//   (it only errors if it exists but cannot be read).
+//   - In production, .env file may not exist; env vars are usually injected by the platform.
+//   - We still call godotenv.Load() because it's convenient locally; it does NOT error if file is missing
+//     (it only errors if it exists but cannot be read).
 func Load() (Config, error) {
 	_ = godotenv.Load()
 
 	cfg := Config{
-		Port:           getenv("PORT", "8080"),
-		DBURL:          os.Getenv("DB_URL"),
-		JWTSecret:      os.Getenv("JWT_SECRET"),
+		Port:          getenv("PORT", "8080"),
+		DBURL:         os.Getenv("DB_URL"),
+		JWTSecret:     os.Getenv("JWT_SECRET"),
+		PublicBaseURL: os.Getenv("PUBLIC_BASE_URL"),
+		StorageDriver: getenv("STORAGE_DRIVER", ""),
+
 		MinioEndpoint:  os.Getenv("MINIO_ENDPOINT"),
 		MinioAccessKey: os.Getenv("MINIO_ACCESS_KEY"),
 		MinioSecretKey: os.Getenv("MINIO_SECRET_KEY"),
@@ -71,8 +86,16 @@ func Load() (Config, error) {
 	}
 	cfg.MinioUseSSL = useSSL
 
-	// For MinIO, we allow empty values early, because some devs may skip MinIO initially.
-	// We will validate again when creating MinIO client (and return a clear error there).
+	// Storage driver defaulting:
+	// - If STORAGE_DRIVER is set, we trust it.
+	// - Otherwise: if MINIO_ENDPOINT exists, use MinIO; else use local storage.
+	if cfg.StorageDriver == "" {
+		if cfg.MinioEndpoint != "" {
+			cfg.StorageDriver = "minio"
+		} else {
+			cfg.StorageDriver = "local"
+		}
+	}
 
 	return cfg, nil
 }
@@ -84,4 +107,3 @@ func getenv(key, fallback string) string {
 	}
 	return v
 }
-

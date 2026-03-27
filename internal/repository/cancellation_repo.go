@@ -45,4 +45,3 @@ func (r *CancellationRepo) Create(ctx context.Context, c domain.Cancellation) (d
 		CreatedAt: out.CreatedAt,
 	}, nil
 }
-

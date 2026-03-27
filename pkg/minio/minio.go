@@ -26,9 +26,9 @@ type Client struct {
 
 // NewMinioClient connects to MinIO and ensures the bucket exists and is public.
 func NewMinioClient(cfg config.Config) (*Client, error) {
-	// if cfg.MinioEndpoint == "" {
-	// 	return nil, fmt.Errorf("MINIO_ENDPOINT is required")
-	// }
+	if cfg.MinioEndpoint == "" {
+		return nil, fmt.Errorf("MINIO_ENDPOINT is required")
+	}
 	if cfg.MinioAccessKey == "" || cfg.MinioSecretKey == "" {
 		return nil, fmt.Errorf("MINIO_ACCESS_KEY and MINIO_SECRET_KEY are required")
 	}
@@ -124,4 +124,3 @@ func BuildObjectName(id string, originalFilename string) string {
 	ext := path.Ext(originalFilename) // includes dot, e.g. ".jpg"
 	return id + ext
 }
-

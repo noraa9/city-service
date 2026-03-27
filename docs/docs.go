@@ -851,9 +851,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "city-service-production.up.railway.app",
+	Host:             "",
 	BasePath:         "/api",
-	Schemes:          []string{"https"},
+	Schemes:          []string{},
 	Title:            "City Service API",
 	Description:      "REST API for City Service — city request management platform",
 	InfoInstanceName: "swagger",

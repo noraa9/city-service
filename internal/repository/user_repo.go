@@ -105,12 +105,12 @@ func (r *UserRepo) GetByID(ctx context.Context, id uuid.UUID) (domain.User, erro
 
 func toDomainUser(u dbUser) domain.User {
 	return domain.User{
-		ID:           u.ID,
-		FullName:     u.FullName,
-		Email:        u.Email,
-		PasswordHash: u.PasswordHash,
-		Phone:        u.Phone.String,
-		Role:         u.Role,
+		ID:                u.ID,
+		FullName:          u.FullName,
+		Email:             u.Email,
+		PasswordHash:      u.PasswordHash,
+		Phone:             u.Phone.String,
+		Role:              u.Role,
 		CompanyName:       stringPtr(u.CompanyName),
 		ResponsiblePerson: stringPtr(u.ResponsiblePerson),
 		CompanyPhone:      stringPtr(u.CompanyPhone),
@@ -139,4 +139,3 @@ func stringPtr(ns sql.NullString) *string {
 	v := ns.String
 	return &v
 }
-

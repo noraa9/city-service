@@ -78,4 +78,3 @@ func toRequestResponse(r domain.Request) dto.RequestResponse {
 		UpdatedAt:     r.UpdatedAt.Format(time.RFC3339),
 	}
 }
-

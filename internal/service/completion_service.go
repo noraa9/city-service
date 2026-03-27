@@ -71,4 +71,3 @@ func (s *CompletionSvc) Complete(ctx context.Context, requestID uuid.UUID, contr
 
 	return s.requests.GetByID(ctx, requestID)
 }
-

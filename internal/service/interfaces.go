@@ -106,4 +106,3 @@ type RequestFilters struct {
 
 	ContractorID *uuid.UUID
 }
-

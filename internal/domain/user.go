@@ -18,8 +18,8 @@ const (
 // User is the core domain model for authentication + ownership.
 //
 // Important design choice:
-// - This struct is "pure domain": no JSON tags, no SQL tags.
-//   JSON belongs in DTOs, SQL mapping belongs in repository layer.
+//   - This struct is "pure domain": no JSON tags, no SQL tags.
+//     JSON belongs in DTOs, SQL mapping belongs in repository layer.
 type User struct {
 	ID           uuid.UUID
 	FullName     string
@@ -36,4 +36,3 @@ type User struct {
 
 	CreatedAt time.Time
 }
-

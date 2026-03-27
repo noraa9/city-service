@@ -22,4 +22,3 @@ type Cancellation struct {
 	Comment   string
 	CreatedAt time.Time
 }
-

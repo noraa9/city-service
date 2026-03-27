@@ -7,8 +7,9 @@ import (
 // RequireRole is a middleware factory.
 //
 // Usage:
-//   r.Use(authMiddleware.Authenticate)
-//   r.Use(middleware.RequireRole("monitor"))
+//
+//	r.Use(authMiddleware.Authenticate)
+//	r.Use(middleware.RequireRole("monitor"))
 func RequireRole(roles ...string) func(http.Handler) http.Handler {
 	allowed := make(map[string]struct{}, len(roles))
 	for _, r := range roles {
@@ -32,4 +33,3 @@ func RequireRole(roles ...string) func(http.Handler) http.Handler {
 		})
 	}
 }
-

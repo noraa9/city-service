@@ -65,4 +65,3 @@ type CancellationRepository interface {
 type CompletionRepository interface {
 	Create(ctx context.Context, c domain.Completion) (domain.Completion, error)
 }
-

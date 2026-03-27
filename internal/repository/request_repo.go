@@ -339,4 +339,3 @@ func buildRequestListQuery(base string, f RequestFilters, includeOrder bool, ext
 
 	return sb.String(), args
 }
-

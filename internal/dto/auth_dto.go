@@ -37,4 +37,3 @@ type UserResponse struct {
 	ResponsiblePerson *string `json:"responsible_person,omitempty"`
 	CompanyPhone      *string `json:"company_phone,omitempty"`
 }
-

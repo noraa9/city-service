@@ -76,4 +76,3 @@ func ParseToken(tokenString, secret string) (*Claims, error) {
 
 	return claims, nil
 }
-

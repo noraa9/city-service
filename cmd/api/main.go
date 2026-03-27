@@ -3,8 +3,6 @@
 // @title           City Service API
 // @version         1.0
 // @description     REST API for City Service — city request management platform
-// @host            city-service-production.up.railway.app
-// @Schemes         https
 // @BasePath        /api
 // @securityDefinitions.apikey BearerAuth
 // @in              header
@@ -29,6 +27,7 @@ import (
 	"city-service/internal/service"
 	"city-service/pkg/logger"
 	miniopkg "city-service/pkg/minio"
+	"city-service/pkg/storage"
 	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/go-chi/chi/v5"
@@ -68,18 +67,35 @@ func main() {
 		os.Exit(1)
 	}
 
-	// 4. Connect to MinIO, ensure bucket exists.
-	// minioClient, err := miniopkg.NewMinioClient(cfg)
-	// if err != nil {
-	// 	log.Error("minio init failed", slog.String("error", err.Error()))
-	// 	os.Exit(1)
-	// }
-	var minioClient *miniopkg.Client
-	if cfg.MinioEndpoint != "" {
-		minioClient, err = miniopkg.NewMinioClient(cfg)
+	// 4. Initialize file storage for photo uploads.
+	// We support two drivers:
+	// - "minio": S3-compatible storage (durable, recommended for production)
+	// - "local": filesystem storage (easy testing, works on Railway without extra services)
+	var fileStorage service.FileStorage
+	var storageBucket string
+
+	switch cfg.StorageDriver {
+	case "minio":
+		minioClient, err := miniopkg.NewMinioClient(cfg)
 		if err != nil {
-			log.Warn("minio init failed, file uploads disabled", slog.String("error", err.Error()))
+			log.Error("minio init failed", slog.String("error", err.Error()))
+			os.Exit(1)
 		}
+		fileStorage = minioClient
+		storageBucket = cfg.MinioBucket
+		log.Info("storage", slog.String("driver", "minio"))
+	case "local":
+		ls, err := storage.NewLocalStorage("./uploads", cfg.PublicBaseURL, "/uploads")
+		if err != nil {
+			log.Error("local storage init failed", slog.String("error", err.Error()))
+			os.Exit(1)
+		}
+		fileStorage = ls
+		storageBucket = "local"
+		log.Info("storage", slog.String("driver", "local"))
+	default:
+		log.Error("unknown STORAGE_DRIVER", slog.String("value", cfg.StorageDriver))
+		os.Exit(1)
 	}
 
 	// 5. Initialize repositories (DB only).
@@ -92,8 +108,8 @@ func main() {
 	// 6. Initialize services (business logic only).
 	authSvc := service.NewAuthService(userRepo, cfg.JWTSecret, cfg.JWTExpiry)
 	categorySvc := service.NewCategoryService(categoryRepo)
-	requestSvc := service.NewRequestService(requestRepo, categoryRepo, cancellationRepo, minioClient, cfg.MinioBucket)
-	completionSvc := service.NewCompletionService(requestRepo, completionRepo, minioClient, cfg.MinioBucket)
+	requestSvc := service.NewRequestService(requestRepo, categoryRepo, cancellationRepo, fileStorage, storageBucket)
+	completionSvc := service.NewCompletionService(requestRepo, completionRepo, fileStorage, storageBucket)
 
 	// 7. Initialize handlers (HTTP only).
 	authHandler := handler.NewAuthHandler(authSvc)
@@ -113,6 +129,14 @@ func main() {
 
 	// Swagger UI endpoint (not under /api so it's easy to discover in browser).
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
+
+	// Serve local uploaded files (only when using local storage).
+	if cfg.StorageDriver == "local" {
+		fs := http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads")))
+		r.Get("/uploads/*", func(w http.ResponseWriter, r *http.Request) {
+			fs.ServeHTTP(w, r)
+		})
+	}
 
 	// 9. Register all API routes.
 	r.Route("/api", func(r chi.Router) {
@@ -195,4 +219,3 @@ func runMigrations(db *sqlx.DB) error {
 	}
 	return nil
 }
-
